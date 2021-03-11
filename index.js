@@ -73,7 +73,7 @@ app.post("/api/reminders", (request, response) => {
 		});
 });
 
-const PORT = 3001; // remember to change in client's package.json proxy also!
+const PORT = process.env.PORT || 3001; // remember to change in client's package.json proxy also!
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
 });
