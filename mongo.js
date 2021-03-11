@@ -8,7 +8,7 @@ if (name && timestamp) {
 		name: name,
 		timestamp: timestampDate
 	});
-	console.log(`adding person Reminder ${name} at ${timestampDate.toISOString()} to the reminder database`);
+	console.log(`adding Reminder ${name} at ${timestampDate.toISOString()} to the reminder database`);
 	reminder
 		.save()
 		.then(() => closeConnection())

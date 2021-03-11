@@ -2,7 +2,7 @@ import React from "react";
 import Reminders from "./Reminders";
 import AddReminderForm from "./AddReminderForm";
 import reminderService from "../services/reminderService";
-import formatDateTime from "../utils/timeUtils"
+import formatDateTime from "../utils/timeUtils";
 
 class App extends React.Component {
 	constructor(props) {
@@ -16,9 +16,14 @@ class App extends React.Component {
 
 	componentDidMount() {
 		// Get and set initial reminders
-		reminderService.getAllReminders().then((reminders) => {
-			this.setState({ reminders });
-		});
+		reminderService
+			.getAllReminders()
+			.then((reminders) => {
+				this.setState({ reminders });
+			})
+			.catch((error) => {
+				console.log("Could not fetch reminders from database", error);
+			});
 	}
 
 	addReminder = (e) => {

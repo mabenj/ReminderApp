@@ -9,7 +9,6 @@
 }
 
 body {
-	background-attachment: fixed;
 	background: rgb(255, 205, 112);
 	background: linear-gradient(
 		45deg,
@@ -21,6 +20,7 @@ body {
 	background-size: 200% 200%;
 	height: 100vh;
 	animation: bg-change 25s ease infinite;
+	background-attachment: fixed;
 }
 
 @keyframes bg-change {
@@ -79,7 +79,7 @@ td {
 .container {
 	margin: 50px 0;
 	padding: 40px;
-	width: 40%;
+	width: 700px;
 	background-color: rgba(56, 56, 56, 0.2);
 	border-radius: 25px;
 	-webkit-backdrop-filter: blur(10px);
@@ -112,27 +112,17 @@ td {
 	background-color: #ff9999;
 }
 
-@media only screen and (max-width: 1300px) {
-	.container {
-		width: 50%;
-	}
-
+@media only screen and (max-width: 1000px) {
 	.timestamp {
 		white-space: normal;
 	}
-}
 
-@media only screen and (max-width: 1000px) {
 	.container {
 		width: 70%;
 	}
 }
 
 @media only screen and (max-width: 768px) {
-	body {
-		background-attachment: fixed;
-	}
-
 	td {
 		padding: 10px;
 	}
