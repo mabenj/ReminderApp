@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function AddReminderForm({ submitHandler, setName, setDateTime, nameValue, dateTimeValue }) {
+export default function AddReminderForm({ addReminderHandler }) {
+	const [reminderName, setReminderName] = useState("");
+	const [dateTime, setDateTime] = useState({ date: "", time: "" });
+
 	const onDateChange = (e) => {
-		setDateTime({ date: e.target.value, time: dateTimeValue.time });
+		setDateTime((prevState) => ({ date: e.target.value, time: prevState.time }));
 	};
 
 	const onTimeChange = (e) => {
-		setDateTime({ date: dateTimeValue.date, time: e.target.value });
+		setDateTime((prevState) => ({ date: prevState.date, time: e.target.value }));
+	};
+
+	const onSubmit = (e) => {
+		e.preventDefault();
+		addReminderHandler(reminderName, dateTime)
+			.then(() => {
+				setReminderName("");
+				setDateTime({ date: "", time: "" });
+			})
+			.catch((error) => {
+				console.log(console.error(`Could not create reminder: ${error}`));
+			});
 	};
 
 	return (
-		<form onSubmit={submitHandler}>
+		<form onSubmit={onSubmit}>
 			<table>
 				<tbody>
 					<tr>
@@ -20,8 +35,8 @@ export default function AddReminderForm({ submitHandler, setName, setDateTime, n
 						<td>
 							<input
 								id="reminder-name"
-								value={nameValue}
-								onChange={(e) => setName(e.target.value)}
+								value={reminderName}
+								onChange={(e) => setReminderName(e.target.value)}
 								placeholder="Osta makkaraa..."
 								required
 							/>
@@ -34,7 +49,7 @@ export default function AddReminderForm({ submitHandler, setName, setDateTime, n
 						<td>
 							<input
 								id="reminder-date"
-								value={dateTimeValue.date}
+								value={dateTime.date}
 								onChange={onDateChange}
 								type="date"
 								style={{ marginRight: "20px" }}
@@ -42,7 +57,7 @@ export default function AddReminderForm({ submitHandler, setName, setDateTime, n
 							/>
 							<input
 								id="reminder-time"
-								value={dateTimeValue.time}
+								value={dateTime.time}
 								onChange={onTimeChange}
 								type="time"
 								pattern="[0-9]{2}:[0-9]{2}"

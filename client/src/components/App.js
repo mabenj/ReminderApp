@@ -8,9 +8,7 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			reminders: [],
-			newName: "",
-			newDateTime: { date: "", time: "" }
+			reminders: []
 		};
 	}
 
@@ -26,26 +24,24 @@ class App extends React.Component {
 			});
 	}
 
-	addReminder = (e) => {
-		e.preventDefault();
-		if (this.state.reminders.some((reminder) => reminder.name === this.state.newName)) {
+	onAddReminder = async (reminderName, reminderDateTime) => {
+		if (this.state.reminders.some((reminder) => reminder.name === reminderName)) {
 			alert("Tää on olemassa jo!");
-			return;
+			return Promise.reject("Duplicate reminder");
 		}
 		// Post to server
 		reminderService
-			.createReminder(this.state.newName, formatDateTime(this.state.newDateTime))
+			.createReminder(reminderName, formatDateTime(reminderDateTime))
 			.then((newReminder) => {
 				// Update state
 				this.setState((prevState) => ({
-					reminders: [...prevState.reminders, newReminder],
-					newName: "",
-					newDateTime: { date: "", time: "" }
+					reminders: [...prevState.reminders, newReminder]
 				}));
 				console.log(`Reminder with id: ${newReminder.id} successfully created`);
+				return Promise.resolve();
 			})
-			.catch((reason) => {
-				console.log(`Could not create a reminder: ${reason}`);
+			.catch((error) => {
+				return Promise.reject(error);
 			});
 	};
 
@@ -70,13 +66,7 @@ class App extends React.Component {
 		return (
 			<div className="container">
 				<h2>Lisää muistutus</h2>
-				<AddReminderForm
-					submitHandler={this.addReminder}
-					setName={(name) => this.setState({ newName: name })}
-					setDateTime={(dateTime) => this.setState({ newDateTime: dateTime })}
-					nameValue={this.state.newName}
-					dateTimeValue={this.state.newDateTime}
-				/>
+				<AddReminderForm addReminderHandler={this.onAddReminder} />
 				<h2>Muistutukset</h2>
 				<Reminders reminders={this.state.reminders} deletionHandler={this.onReminderDelete} />
 			</div>
