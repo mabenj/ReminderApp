@@ -20,13 +20,13 @@ class App extends React.Component {
 				this.setState({ reminders });
 			})
 			.catch((error) => {
-				console.log("Could not fetch reminders from database", error);
+				console.error("Could not fetch reminders from database", error);
 			});
 	}
 
 	onAddReminder = async (reminderName, reminderDateTime) => {
 		if (this.state.reminders.some((reminder) => reminder.name === reminderName)) {
-			alert("Tää on olemassa jo!");
+			alert("Muistutus on jo olemassa!");
 			return Promise.reject("Duplicate reminder");
 		}
 		// Post to server
@@ -46,7 +46,7 @@ class App extends React.Component {
 	};
 
 	onReminderDelete = (id) => {
-		if (window.confirm("Ootko ihan varma?")) {
+		if (window.confirm("Haluatko varmasti poistaa muistutuksen?")) {
 			// Delete from server
 			reminderService.deleteReminderById(id).then((wasSuccess) => {
 				if (wasSuccess) {
@@ -56,7 +56,7 @@ class App extends React.Component {
 					}));
 					console.log(`Reminder with id: ${id} successfully deleted`);
 				} else {
-					console.log(`Reminder with id: ${id} could not be deleted`);
+					console.error(`Reminder with id: ${id} could not be deleted`);
 				}
 			});
 		}
