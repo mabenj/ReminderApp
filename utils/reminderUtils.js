@@ -1,23 +1,40 @@
-const validateReminder = (data) => {
+const { Reminder } = require("../models/reminder");
+
+const validateReminder = async (data) => {
 	if (!data.name) {
-		return {
+		return Promise.reject({
 			status: 400,
 			reason: "reminder name missing"
-		};
+		});
 	}
 	if (!data.timestamp) {
-		return {
+		return Promise.reject({
 			status: 400,
 			reason: "reminder timestamp missing"
-		};
+		});
 	}
 	if (isNaN(Date.parse(data.timestamp))) {
-		return {
+		return Promise.reject({
 			status: 400,
 			reason: "invalid timestamp"
-		};
+		});
 	}
-	return null;
+	if (await nameExists(data.name)) {
+		return Promise.reject({
+			status: 400,
+			reason: "name must be unique"
+		});
+	}
+	return Promise.resolve({ name: data.name, timestamp: data.timestamp });
+};
+
+const nameExists = async (name) => {
+	try {
+		const result = await Reminder.find({ name }).exec();
+		return result.length > 0;
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 const formatReminder = (reminder) => {

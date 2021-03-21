@@ -35,45 +35,39 @@ app.get("/api/reminders/:id", (request, response) => {
 			}
 		})
 		.catch(() => {
-			response.status(400).json({ error: "bad id" });
+			response.status(400).json({ error: "malformed id" });
 		});
 });
 
 app.delete("/api/reminders/:id", (request, response) => {
 	Reminder.findByIdAndRemove(request.params.id, { useFindAndModify: false })
 		.then((result) => {
-			if (result) {
-				response.status(204).end();
-			} else {
-				response.status(404).end();
-			}
+			response.status(result ? 204 : 404).end();
 		})
 		.catch(() => {
-			response.status(400).json({ error: "bad id" });
+			response.status(400).json({ error: "malformed id" });
 		});
 });
 
 app.post("/api/reminders", (request, response) => {
-	const data = request.body;
-	const error = validateReminder(data);
-	if (error) {
-		return response.status(error.status).json({ error: error.reason });
-	}
-	const newReminder = new Reminder({
-		name: data.name,
-		timestamp: new Date(data.timestamp)
-	});
-	newReminder
-		.save()
-		.then(formatReminder)
-		.then((newReminder) => response.json(newReminder))
+	validateReminder(request.body)
+		.then(({ name, timestamp }) => {
+			const newReminder = new Reminder({ name, timestamp: new Date(timestamp) });
+			newReminder
+				.save()
+				.then(formatReminder)
+				.then((newReminder) => response.status(201).json(newReminder))
+				.catch((error) => {
+					console.log(error);
+					response.status(500).json({ error: "could not create a new reminder" });
+				});
+		})
 		.catch((error) => {
-			console.log(error);
-			response.status(500).json({ error: "could not create a new reminder" });
+			return response.status(error.status).json({ error: error.reason });
 		});
 });
 
-const PORT = process.env.PORT || 3001; // remember to change in client's package.json proxy also!
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
 });

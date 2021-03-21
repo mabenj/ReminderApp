@@ -37,7 +37,6 @@ class App extends React.Component {
 				this.setState((prevState) => ({
 					reminders: [...prevState.reminders, newReminder]
 				}));
-				console.log(`Reminder with id: ${newReminder.id} successfully created`);
 				return Promise.resolve();
 			})
 			.catch((error) => {
@@ -54,7 +53,6 @@ class App extends React.Component {
 					this.setState((prevState) => ({
 						reminders: prevState.reminders.filter((reminder) => reminder.id !== id)
 					}));
-					console.log(`Reminder with id: ${id} successfully deleted`);
 				} else {
 					console.error(`Reminder with id: ${id} could not be deleted`);
 				}

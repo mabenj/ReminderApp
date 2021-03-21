@@ -20,7 +20,7 @@ export default function AddReminderForm({ addReminderHandler }) {
 				setDateTime({ date: "", time: "" });
 			})
 			.catch((error) => {
-				console.log(console.error(`Could not create reminder: ${error}`));
+				console.error(`Could not create reminder: ${error}`);
 			});
 	};
 

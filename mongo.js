@@ -8,19 +8,19 @@ if (name && timestamp) {
 		name: name,
 		timestamp: timestampDate
 	});
-	console.log(`adding Reminder ${name} at ${timestampDate.toISOString()} to the reminder database`);
+	console.log(`adding reminder ${name} at ${timestampDate.toISOString()} to the reminder database`);
 	reminder
 		.save()
 		.then(() => closeConnection())
-		.catch((error) => console.log(error));
+		.catch(console.log);
 } else {
-	console.log("Reminders:");
 	Reminder.find({})
 		.then((result) => {
+			console.log("Reminders:");
 			result.forEach((reminder) => {
 				console.log(`${reminder.name}, ${new Date(reminder.timestamp).toISOString()}`);
 			});
 			closeConnection();
 		})
-		.catch((error) => console.log(error));
+		.catch(console.log);
 }
